@@ -105,9 +105,13 @@ export function useFilmScrub(
   }
 
   useEffect(() => {
+    // Phones load the 768w frame set (~5x lighter) to kill scroll lag; the
+    // canvas upscales into the band and stays crisp on the 4K-sourced frames.
+    const small = window.innerWidth < 1024;
+
     // poster = first frame of this film's window
     const poster = new Image();
-    poster.src = scrollFrame(frameIndex(window0) + 1);
+    poster.src = scrollFrame(frameIndex(window0) + 1, small);
     poster.onload = () => {
       posterRef.current = poster;
       draw(0);
@@ -118,7 +122,7 @@ export function useFilmScrub(
     const to = frameIndex(window1);
     for (let i = from; i <= to; i++) {
       const img = new Image();
-      img.src = scrollFrame(i + 1); // files are 1-indexed
+      img.src = scrollFrame(i + 1, small); // files are 1-indexed
       imagesRef.current.set(i, img);
     }
     const first = imagesRef.current.get(from);

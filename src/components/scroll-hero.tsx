@@ -10,6 +10,10 @@ import { business } from "@/lib/site";
  * Homepage header: the short cut — fence builds, gate opens, logo reveals,
  * hold with CTA — then the page continues. The full fence-material film
  * lives on /styles.
+ *
+ * Desktop: full-bleed cover canvas. Mobile: the film sits in a 16:9 band so
+ * the logo fits the phone width (cover of a 16:9 frame into a 16:9 box = no
+ * crop), and the CTAs sit below it.
  */
 const F = (i: number) => i / 7; // master-film clip boundaries
 
@@ -34,64 +38,125 @@ export function ScrollHero() {
 
   return (
     <div ref={wrapRef} className="relative" style={{ height: `${WRAP_VH}vh` }}>
-      <div className="sticky top-0 h-screen w-full overflow-hidden bg-grove-deep">
-        <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-grove-deep/45 via-transparent to-grove-deep/70" />
-
-        {/* Intro */}
-        <div
-          className="absolute inset-x-0 top-[18%] flex flex-col items-center px-6 text-center"
-          style={{ opacity: introOpacity }}
-        >
-          <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-cream/15 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-cream backdrop-blur">
-            Est. {business.since} · {business.years} years
-          </span>
-          <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.05] text-cream drop-shadow-lg sm:text-6xl md:text-7xl">
-            Lake County&apos;s Fence Family,
-            <br className="hidden sm:block" /> Since 1997.
-          </h1>
+      <div className="sticky top-0 h-[100svh] w-full overflow-hidden bg-grove-deep">
+        {/* Canvas: full-bleed on desktop; a tall band on mobile — sized to sit
+            inside the logo's side margins so it fills the phone without cropping
+            the wordmark, and leaves room for the CTAs below. */}
+        <div className="absolute inset-x-0 top-[7vh] h-[50vh] sm:top-[9vh] sm:h-[52vh] lg:inset-0 lg:top-0 lg:h-full">
+          <canvas ref={canvasRef} className="h-full w-full" />
         </div>
 
-        {/* Scroll hint */}
-        <div
-          className="absolute inset-x-0 bottom-8 flex flex-col items-center gap-1 text-cream/90"
-          style={{ opacity: hintOpacity }}
-        >
-          <span className="text-xs font-medium uppercase tracking-widest">
-            Scroll — watch us build it
-          </span>
-          <ChevronDown className="h-5 w-5 animate-bounce" />
-        </div>
+        {/* ---------- Desktop overlays (full-bleed) ---------- */}
+        <div className="hidden lg:block">
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-grove-deep/45 via-transparent to-grove-deep/70" />
 
-        {/* Logo hold — CTAs, stays visible into the handoff */}
-        <div
-          className="absolute inset-x-0 bottom-[7%] flex flex-col items-center px-6 text-center"
-          style={{
-            opacity: ctaOpacity,
-            pointerEvents: ctaOpacity > 0.5 ? "auto" : "none",
-          }}
-        >
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <Link
-              href="/styles#builder"
-              className="touch-manipulation rounded-full bg-clay px-7 py-3.5 text-base font-semibold text-cream shadow-lg shadow-black/25 transition-colors hover:bg-clay-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
-            >
-              Get a Free Estimate
-            </Link>
-            <a
-              href={business.phoneHref}
-              className="inline-flex touch-manipulation items-center gap-2 rounded-full border border-cream/40 bg-cream/10 px-6 py-3.5 text-base font-semibold text-cream backdrop-blur transition-colors hover:bg-cream/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
-            >
-              <Phone className="h-4 w-4" /> {business.phone}
-            </a>
-          </div>
-          <Link
-            href="/styles"
-            className="mt-5 inline-flex touch-manipulation items-center gap-1.5 text-sm font-semibold text-cream/90 underline-offset-4 transition-colors hover:text-gold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+          <div
+            className="absolute inset-x-0 top-[18%] flex flex-col items-center px-6 text-center"
+            style={{ opacity: introOpacity }}
           >
-            Watch every fence style glide across a real yard{" "}
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+            <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-cream/15 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-cream backdrop-blur">
+              Est. {business.since} · {business.years} years
+            </span>
+            <h1 className="max-w-4xl font-display text-6xl font-semibold leading-[1.05] text-cream drop-shadow-lg md:text-7xl">
+              Lake County&apos;s Fence Family,
+              <br /> Since 1997.
+            </h1>
+          </div>
+
+          <div
+            className="absolute inset-x-0 bottom-8 flex flex-col items-center gap-1 text-cream/90"
+            style={{ opacity: hintOpacity }}
+          >
+            <span className="text-xs font-medium uppercase tracking-widest">
+              Scroll — watch us build it
+            </span>
+            <ChevronDown className="h-5 w-5 animate-bounce" />
+          </div>
+
+          <div
+            className="absolute inset-x-0 bottom-[7%] flex flex-col items-center px-6 text-center"
+            style={{
+              opacity: ctaOpacity,
+              pointerEvents: ctaOpacity > 0.5 ? "auto" : "none",
+            }}
+          >
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <Link
+                href="/styles#builder"
+                className="rounded-full bg-clay px-7 py-3.5 text-base font-semibold text-cream shadow-lg shadow-black/25 transition-colors hover:bg-clay-dark"
+              >
+                Get a Free Estimate
+              </Link>
+              <a
+                href={business.phoneHref}
+                className="inline-flex items-center gap-2 rounded-full border border-cream/40 bg-cream/10 px-6 py-3.5 text-base font-semibold text-cream backdrop-blur transition-colors hover:bg-cream/20"
+              >
+                <Phone className="h-4 w-4" /> {business.phone}
+              </a>
+            </div>
+            <Link
+              href="/styles"
+              className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-cream/90 underline-offset-4 transition-colors hover:text-gold hover:underline"
+            >
+              Watch every fence style glide across a real yard{" "}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+
+        {/* ---------- Mobile: content below the band ---------- */}
+        <div className="absolute inset-x-0 bottom-0 top-[calc(7vh+50vh)] px-5 pt-5 sm:top-[calc(9vh+52vh)] lg:hidden">
+          {/* Intro (start of scroll) */}
+          <div
+            className="absolute inset-x-5 top-6 flex flex-col items-center text-center"
+            style={{ opacity: introOpacity }}
+          >
+            <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-cream/15 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-cream backdrop-blur">
+              Est. {business.since} · {business.years} years
+            </span>
+            <h1 className="font-display text-3xl font-semibold leading-[1.06] text-cream drop-shadow-lg">
+              Lake County&apos;s Fence Family, Since 1997.
+            </h1>
+            <span
+              className="mt-5 flex flex-col items-center gap-1 text-cream/90"
+              style={{ opacity: hintOpacity }}
+            >
+              <span className="text-[11px] font-medium uppercase tracking-widest">
+                Scroll — watch us build it
+              </span>
+              <ChevronDown className="h-5 w-5 animate-bounce" />
+            </span>
+          </div>
+
+          {/* CTA (logo-reveal hold) */}
+          <div
+            className="absolute inset-x-5 top-4 flex flex-col items-center text-center"
+            style={{
+              opacity: ctaOpacity,
+              pointerEvents: ctaOpacity > 0.5 ? "auto" : "none",
+            }}
+          >
+            <div className="flex w-full max-w-xs flex-col items-stretch gap-2.5">
+              <Link
+                href="/styles#builder"
+                className="touch-manipulation rounded-full bg-clay px-6 py-3.5 text-base font-semibold text-cream shadow-lg shadow-black/25"
+              >
+                Get a Free Estimate
+              </Link>
+              <a
+                href={business.phoneHref}
+                className="inline-flex touch-manipulation items-center justify-center gap-2 rounded-full border border-cream/40 bg-cream/10 px-6 py-3.5 text-base font-semibold text-cream backdrop-blur"
+              >
+                <Phone className="h-4 w-4" /> {business.phone}
+              </a>
+            </div>
+            <Link
+              href="/styles"
+              className="mt-4 inline-flex touch-manipulation items-center gap-1.5 text-sm font-semibold text-cream/90 underline-offset-4"
+            >
+              Watch every fence style glide by <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
       </div>
     </div>

@@ -50,9 +50,9 @@ export function PassCheck() {
   return (
     <div className="overflow-hidden rounded-3xl border-2 border-grove/20 bg-card shadow-xl shadow-grove/10">
       {/* Inspector-card header */}
-      <div className="flex items-center justify-between gap-3 border-b-2 border-dashed border-grove/20 bg-cream/60 px-6 py-4 sm:px-8">
+      <div className="flex items-center justify-between gap-3 border-b-2 border-dashed border-grove/20 bg-cream/60 px-4 py-4 sm:px-8">
         <div className="flex items-center gap-3">
-          <ClipboardCheck className="h-6 w-6 text-grove" />
+          <ClipboardCheck className="h-6 w-6 shrink-0 text-grove" />
           <div>
             <p className="font-display text-lg font-semibold leading-tight text-ink">
               Pool Barrier Self-Inspection
@@ -71,23 +71,28 @@ export function PassCheck() {
         {QUESTIONS.map((item, i) => {
           const a = answers[i];
           return (
-            <li key={i} className="flex flex-wrap items-center gap-4 px-6 py-5 sm:px-8">
+            <li
+              key={i}
+              className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:gap-4 sm:px-8 sm:py-5"
+            >
               <div className="min-w-0 flex-1">
                 <p className="font-medium text-ink">
-                  <span className="mr-2 font-display text-clay">
-                    {i + 1}.
-                  </span>
+                  <span className="mr-2 font-display text-clay">{i + 1}.</span>
                   {item.q}
                 </p>
                 <p className="mt-0.5 text-sm text-ink/55">{item.hint}</p>
               </div>
-              <div className="flex gap-2" role="group" aria-label={item.q}>
+              <div
+                className="grid grid-cols-2 gap-2 sm:flex sm:shrink-0"
+                role="group"
+                aria-label={item.q}
+              >
                 <button
                   type="button"
                   onClick={() => set(i, true)}
                   aria-pressed={a === true}
                   className={clsx(
-                    "touch-manipulation rounded-full border px-5 py-2.5 text-sm font-semibold transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-grove",
+                    "touch-manipulation rounded-full border px-4 py-2.5 text-center text-sm font-semibold transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-grove sm:px-5",
                     a === true
                       ? "border-grove bg-grove text-cream"
                       : "border-line bg-card text-ink hover:border-grove/50",
@@ -100,7 +105,7 @@ export function PassCheck() {
                   onClick={() => set(i, false)}
                   aria-pressed={a === false}
                   className={clsx(
-                    "touch-manipulation rounded-full border px-5 py-2.5 text-sm font-semibold transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clay",
+                    "touch-manipulation whitespace-nowrap rounded-full border px-4 py-2.5 text-center text-sm font-semibold transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clay sm:px-5",
                     a === false
                       ? "border-clay bg-clay text-cream"
                       : "border-line bg-card text-ink hover:border-clay/50",
@@ -118,7 +123,7 @@ export function PassCheck() {
       <div
         aria-live="polite"
         className={clsx(
-          "px-6 py-6 sm:px-8",
+          "px-4 py-6 sm:px-8",
           complete
             ? fails === 0
               ? "bg-grove text-cream"
@@ -132,9 +137,9 @@ export function PassCheck() {
             verdict.
           </p>
         ) : fails === 0 ? (
-          <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
-              <span className="flex h-12 w-12 -rotate-6 items-center justify-center rounded-lg border-2 border-cream/70">
+              <span className="flex h-12 w-12 shrink-0 -rotate-6 items-center justify-center rounded-lg border-2 border-cream/70">
                 <Stamp className="h-6 w-6" />
               </span>
               <div>
@@ -148,13 +153,13 @@ export function PassCheck() {
             </div>
             <Link
               href="/styles?type=pool#builder"
-              className="touch-manipulation rounded-full bg-gold px-6 py-3 text-sm font-semibold text-ink transition-all hover:brightness-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream"
+              className="shrink-0 touch-manipulation rounded-full bg-gold px-6 py-3 text-center text-sm font-semibold text-ink transition-all hover:brightness-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream"
             >
               Book a free code check
             </Link>
           </div>
         ) : (
-          <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <ShieldAlert className="h-10 w-10 shrink-0" />
               <div>
@@ -169,7 +174,7 @@ export function PassCheck() {
             </div>
             <Link
               href="/styles?type=pool#builder"
-              className="touch-manipulation rounded-full bg-cream px-6 py-3 text-sm font-semibold text-clay transition-colors hover:bg-cream/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream"
+              className="shrink-0 touch-manipulation rounded-full bg-cream px-6 py-3 text-center text-sm font-semibold text-clay transition-colors hover:bg-cream/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream"
             >
               Fix it before the inspector sees it
             </Link>
