@@ -105,9 +105,10 @@ export function useFilmScrub(
   }
 
   useEffect(() => {
-    // Phones load the 768w frame set (~5x lighter) to kill scroll lag; the
-    // canvas upscales into the band and stays crisp on the 4K-sourced frames.
-    const small = window.innerWidth < 1024;
+    // Mobile plays the film as Cloudflare Stream video (crisp + snap-scroll),
+    // so the desktop-only canvas scrub never preloads frames on phones.
+    if (window.innerWidth < 1024) return;
+    const small = false;
 
     // poster = first frame of this film's window
     const poster = new Image();

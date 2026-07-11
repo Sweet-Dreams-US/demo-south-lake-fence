@@ -2,14 +2,28 @@
 const BASE =
   "https://vhyjphcwfvrcclqberoe.supabase.co/storage/v1/object/public/demo-media/demo-south-lake-fence";
 
-// Video (the signature film + trailer): Cloudflare Stream.
+// Video: Cloudflare Stream (adaptive HLS — crisp on mobile, streams only what
+// the device/connection needs). The film is chaptered so mobile can snap
+// stop-to-stop and play each transition in high quality.
 const STREAM = "https://customer-w6h9o08eg118alny.cloudflarestream.com";
 export const stream = {
-  scrollFilmUid: "ca9d4bda0d09e737853313b39df7adb5",
-  trailerUid: "026040efdfd4744aa972c47ad8363094",
-  mp4: (uid: string) => `${STREAM}/${uid}/downloads/default.mp4`,
   hls: (uid: string) => `${STREAM}/${uid}/manifest/video.m3u8`,
+  mp4: (uid: string) => `${STREAM}/${uid}/downloads/default.mp4`,
   iframe: (uid: string) => `${STREAM}/${uid}/iframe`,
+  poster: (uid: string) => `${STREAM}/${uid}/thumbnails/thumbnail.jpg?height=1080`,
+};
+
+// Homepage hero: build → gate → logo reveal (cut after the logo).
+export const heroFilmUid = "d5fdc4ed54b8898e9365af2fb031b497";
+export const trailerUid = "026040efdfd4744aa972c47ad8363094";
+
+// Styles page material showcase — one chapter per material (the slide-in).
+export const materialFilm: Record<string, string> = {
+  wood: "94ea61997a4d8333d01875775a6c94c5",
+  aluminum: "167aae80f479e34a9f0946128c471a35",
+  vinyl: "fe8adb5bc3e462a9bec13f6e23cf5841",
+  "chain-link": "c8df68b56d709b53d2b6e5f085a6e097",
+  "wrought-iron": "1780d807a67932bd14157282f98082fa",
 };
 
 export const media = {
@@ -24,11 +38,7 @@ export const media = {
   commercial: `${BASE}/commercial-np.webp`, // people-free (no workers)
   beforeAfter: `${BASE}/before-after.webp`,
   map: `${BASE}/map.webp`,
-  scrollVideo: stream.mp4("ca9d4bda0d09e737853313b39df7adb5"), // Cloudflare Stream (4K master)
-  scrollVideoHls: stream.hls("ca9d4bda0d09e737853313b39df7adb5"),
   scrollPoster: `${BASE}/scroll-poster-4k.webp`,
-  trailer: stream.mp4("026040efdfd4744aa972c47ad8363094"), // Cloudflare Stream
-  trailerPoster: `${BASE}/trailer-poster.webp`,
   repairBefore: `${BASE}/repair-before.webp`,
   repairAfter: `${BASE}/repair-after.webp`,
   panoWood: `${BASE}/pano-wood-v2.webp`,
