@@ -49,7 +49,8 @@ export const media = {
 } as const;
 
 // Scroll-scrub frame sequence — cut from the native-4K master.
-// `scroll4`   = 1920w (desktop, crisp). `scroll4-sm` = 768w (mobile, ~5x lighter).
+// `scroll4` = 1920w (desktop). `scroll4-md` = 1152w (mobile — crisp on
+// high-DPR phones, much lighter than the full set).
 export const SCROLL_FRAME_COUNT = 283;
 export const scrollFrame = (i: number, small = false) =>
-  `${BASE}/${small ? "scroll4-sm" : "scroll4"}/frame-${String(i).padStart(4, "0")}.webp`;
+  `${BASE}/${small ? "scroll4-md" : "scroll4"}/frame-${String(i).padStart(4, "0")}.webp`;

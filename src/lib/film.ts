@@ -105,10 +105,8 @@ export function useFilmScrub(
   }
 
   useEffect(() => {
-    // Mobile plays the film as Cloudflare Stream video (crisp + snap-scroll),
-    // so the desktop-only canvas scrub never preloads frames on phones.
-    if (window.innerWidth < 1024) return;
-    const small = false;
+    // Phones load the lighter 1152w frame set; desktop the full 1920w.
+    const small = window.innerWidth < 1024;
 
     // poster = first frame of this film's window
     const poster = new Image();
@@ -151,6 +149,117 @@ export function useFilmScrub(
     return () => {
       window.removeEventListener("scroll", onScrollOrResize);
       window.removeEventListener("resize", onScrollOrResize);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return progress;
+}
+
+/**
+ * Snap-scrub: the same frame film, but driven by a NESTED scroll container so
+ * the page can CSS scroll-snap between stops (you land on a material, never
+ * between). `frac = window0 + (window1-window0) * scrollProgress`.
+ */
+export function useScrollerFilm(
+  scrollerRef: RefObject<HTMLDivElement | null>,
+  canvasRef: RefObject<HTMLCanvasElement | null>,
+  window0: number,
+  window1: number,
+) {
+  const imagesRef = useRef<Map<number, HTMLImageElement>>(new Map());
+  const posterRef = useRef<HTMLImageElement | null>(null);
+  const [progress, setProgress] = useState(0);
+  const rafRef = useRef<number | null>(null);
+
+  function frameIndex(frac: number) {
+    return Math.min(
+      SCROLL_FRAME_COUNT - 1,
+      Math.max(0, Math.round(frac * (SCROLL_FRAME_COUNT - 1))),
+    );
+  }
+
+  function draw(prog: number) {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const frac = window0 + (window1 - window0) * prog;
+    const frame = imagesRef.current.get(frameIndex(frac));
+    const img =
+      frame && frame.complete && frame.naturalWidth > 0
+        ? frame
+        : posterRef.current;
+    if (!img || !img.naturalWidth) return;
+
+    const ir = img.naturalWidth / img.naturalHeight;
+    const cr = w / h;
+    let dw = w,
+      dh = h,
+      dx = 0,
+      dy = 0;
+    if (ir > cr) {
+      dh = h;
+      dw = h * ir;
+      dx = (w - dw) / 2;
+    } else {
+      dw = w;
+      dh = w / ir;
+      dy = (h - dh) / 2;
+    }
+    ctx.clearRect(0, 0, w, h);
+    ctx.drawImage(img, dx, dy, dw, dh);
+  }
+
+  useEffect(() => {
+    const small = window.innerWidth < 1024;
+    const poster = new Image();
+    poster.src = scrollFrame(frameIndex(window0) + 1, small);
+    poster.onload = () => {
+      posterRef.current = poster;
+      draw(0);
+    };
+    const from = frameIndex(window0);
+    const to = frameIndex(window1);
+    for (let i = from; i <= to; i++) {
+      const img = new Image();
+      img.src = scrollFrame(i + 1, small);
+      imagesRef.current.set(i, img);
+    }
+    const first = imagesRef.current.get(from);
+    if (first) first.onload = () => draw(0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    const onScroll = () => {
+      if (rafRef.current != null) return;
+      rafRef.current = requestAnimationFrame(() => {
+        rafRef.current = null;
+        const total = scroller.scrollHeight - scroller.clientHeight;
+        const prog = total > 0 ? scroller.scrollTop / total : 0;
+        setProgress(prog);
+        draw(prog);
+      });
+    };
+    onScroll();
+    scroller.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      scroller.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
