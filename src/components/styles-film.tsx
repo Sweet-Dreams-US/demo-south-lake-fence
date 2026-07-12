@@ -76,9 +76,10 @@ export function StylesFilm() {
             className="relative z-10 h-[100svh] snap-start snap-always"
             aria-label={p.name}
           >
-            {/* giant word */}
+            {/* giant word — anchored just above the fence line (robust to
+                screen height, so it never crams under the nav) */}
             <div
-              className="pointer-events-none absolute inset-x-0 top-[11%] flex justify-center lg:top-[13%]"
+              className="pointer-events-none absolute inset-x-0 bottom-[57%] flex justify-center"
               style={{ opacity }}
             >
               <span className="whitespace-nowrap font-display text-[15vw] font-semibold leading-none tracking-tight text-cream drop-shadow-[0_2px_18px_rgba(22,56,38,0.7)] lg:text-[9.5vw]">
@@ -86,9 +87,9 @@ export function StylesFilm() {
               </span>
             </div>
 
-            {/* details + quote */}
+            {/* details + quote — just below the fence line */}
             <div
-              className="absolute inset-x-5 bottom-[9%] flex flex-col items-center text-center lg:inset-x-0"
+              className="absolute inset-x-5 top-[62%] flex flex-col items-center text-center lg:inset-x-0"
               style={{ opacity }}
             >
               <p className="text-xs font-semibold uppercase tracking-[0.25em] text-gold drop-shadow">
