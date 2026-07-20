@@ -7,65 +7,118 @@ import { showcasePanels } from "@/lib/site";
 
 /**
  * Styles & Materials header — driven by the PAGE scroll (a sticky, pinned canvas
- * behind a stack of full-height material sections, exactly like the homepage
- * hero). The fence-material film scrubs wood → aluminum → vinyl → chain-link →
- * iron as you scroll, and each section opts into CSS scroll-snap so you LAND on
- * a material instead of stopping between two — but it's the page scrolling
- * (proximity snap), so it never traps and flows straight into the sections
- * below. No nested scroller: same behavior on mobile and desktop.
+ * behind a stack of full-height material sections, like the homepage hero). It
+ * behaves as a PAGER: any swipe advances exactly one material in the direction
+ * you swiped (so a gentle swipe still lands on the next title, never a
+ * half-state), and at the ends it releases so the page — including the builder
+ * below — scrolls free (no trap). A Next button jumps to the next centered
+ * title. No nested scroller: identical on mobile and desktop.
  */
 const F0 = 3 / 7; // the film's material section starts at the wide wood shot
 const SEGMENTS: Seg[] = [{ kind: "play", from: F0, to: 1, units: 1 }];
+const n = showcasePanels.length; // 5
 
 export function StylesFilm() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const nextRef = useRef<HTMLButtonElement>(null);
+  const animatingRef = useRef(false);
   const progress = useFilmScrub(wrapRef, canvasRef, SEGMENTS, F0, 1);
 
-  const n = showcasePanels.length; // 5
   const pos = progress * (n - 1); // 0..4 (which material we're on/between)
   const current = Math.round(pos);
 
-  // When scrolling settles BETWEEN two materials, glide to the nearest one so a
-  // swipe never leaves you in a half-state. Scoped to the material stops only —
-  // it never fires in the exit zone below the last material, so the builder
-  // below keeps scrolling free (no trap). CSS proximity handles the rest.
+  // Geometry of the material stops in absolute page coordinates.
+  const geom = () => {
+    const wrap = wrapRef.current!;
+    const range = wrap.offsetHeight - window.innerHeight;
+    const wrapTop = wrap.getBoundingClientRect().top + window.scrollY;
+    return { range, wrapTop, step: range / (n - 1) };
+  };
+
+  const glideTo = (i: number, smooth = true) => {
+    const { wrapTop, step } = geom();
+    animatingRef.current = true;
+    window.scrollTo({
+      top: Math.round(wrapTop + i * step),
+      behavior: smooth ? "smooth" : "auto",
+    });
+    window.setTimeout(() => (animatingRef.current = false), 650);
+  };
+
+  // Next button → next centered title (or on into the builder from the last).
+  function goNext() {
+    if (!wrapRef.current) return;
+    const { range, wrapTop, step } = geom();
+    if (range <= 0) return;
+    const cur = Math.max(
+      0,
+      Math.min(n - 1, Math.round((window.scrollY - wrapTop) / step)),
+    );
+    if (cur >= n - 1) {
+      document
+        .getElementById("builder")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      glideTo(cur + 1);
+    }
+  }
+
+  // Pager: when a scroll settles, advance one material in the direction of
+  // travel. Never rests between two, and releases at the ends so the page is
+  // free to continue (the builder exit keeps working).
   useEffect(() => {
     const wrap = wrapRef.current;
     if (!wrap) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    let snapping = false;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let lastY = window.scrollY;
 
-    const snapNearest = () => {
-      if (snapping) return;
-      const range = wrap.offsetHeight - window.innerHeight;
-      if (range <= 0) return;
-      const wrapTop = wrap.getBoundingClientRect().top + window.scrollY;
+    const updateNav = () => {
+      const nav = nextRef.current;
+      if (!nav) return;
+      const { range, wrapTop } = geom();
       const y = window.scrollY;
-      if (y < wrapTop - 2 || y > wrapTop + range + 2) return; // exit zone → free
-      const step = range / (n - 1);
-      const i = Math.max(0, Math.min(n - 1, Math.round((y - wrapTop) / step)));
-      const target = Math.round(wrapTop + i * step);
-      if (Math.abs(target - y) < 4) return; // already on a material
-      snapping = true;
-      window.scrollTo({ top: target, behavior: "smooth" });
-      setTimeout(() => (snapping = false), 600);
+      const show = range > 0 && y >= wrapTop - 4 && y <= wrapTop + range + 4;
+      nav.style.opacity = show ? "1" : "0";
+      nav.style.pointerEvents = show ? "auto" : "none";
+    };
+
+    const settle = () => {
+      if (animatingRef.current) return;
+      const { range, wrapTop, step } = geom();
+      if (range <= 0) return;
+      const y = window.scrollY;
+      const raw = (y - wrapTop) / step; // 0..(n-1) across the materials
+      const down = y >= lastY;
+      lastY = y;
+      if (raw > n - 1 + 0.5 || raw < -0.5) return; // in the builder / above → free
+      if (raw > n - 1 + 0.15 && down) return; // exiting down past the last → free
+      if (raw < -0.15 && !down) return; // exiting up past the first → free
+      let i = down ? Math.ceil(raw - 0.02) : Math.floor(raw + 0.02);
+      i = Math.min(n - 1, Math.max(0, i));
+      if (Math.abs(wrapTop + i * step - y) > 3) glideTo(i, !reduce);
     };
 
     const hasScrollEnd = "onscrollend" in window;
     let idle: ReturnType<typeof setTimeout> | undefined;
     const onScroll = () => {
-      if (hasScrollEnd || snapping) return;
+      updateNav();
+      if (animatingRef.current || reduce || hasScrollEnd) return;
       clearTimeout(idle);
-      idle = setTimeout(snapNearest, 120);
+      idle = setTimeout(settle, 130);
     };
-    if (hasScrollEnd) window.addEventListener("scrollend", snapNearest);
+    updateNav();
+    if (hasScrollEnd && !reduce) window.addEventListener("scrollend", settle);
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", updateNav);
     return () => {
-      if (hasScrollEnd) window.removeEventListener("scrollend", snapNearest);
+      if (hasScrollEnd && !reduce)
+        window.removeEventListener("scrollend", settle);
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", updateNav);
       clearTimeout(idle);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function quoteStyle(slug: string) {
@@ -78,26 +131,22 @@ export function StylesFilm() {
   return (
     <div ref={wrapRef} className="relative bg-grove-deep">
       {/* Pinned film — the page scroll scrubs it; the sections below overlay it.
-          No negative margin here: that would over-extend the pin by a viewport
-          and let the section below scroll up over the photo. The first material
-          section carries the -mt instead, so the canvas unpins exactly when the
-          last material is reached and the page continues cleanly. */}
+          The first material section carries the -mt so the canvas unpins exactly
+          when the last material is reached and the page continues cleanly. */}
       <div className="pointer-events-none sticky top-0 z-0 h-[100svh]">
         <canvas ref={canvasRef} className="h-full w-full" />
         <div className="absolute inset-x-0 top-0 h-2/5 bg-gradient-to-b from-grove-deep/70 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-grove-deep/90 via-grove-deep/30 to-transparent" />
       </div>
 
-      {/* One snap stop per material — the page snaps to each (proximity) */}
+      {/* One full-height stop per material (the pager lands on each) */}
       {showcasePanels.map((p, i) => {
         const opacity = Math.max(0, 1 - Math.abs(pos - i) * 1.7);
         const active = opacity > 0.5;
         return (
           <section
             key={p.slug}
-            className={`relative z-10 h-[100svh] snap-start [scroll-snap-stop:always] ${
-              i === 0 ? "-mt-[100svh]" : ""
-            }`}
+            className={`relative z-10 h-[100svh] ${i === 0 ? "-mt-[100svh]" : ""}`}
             aria-label={p.name}
           >
             {/* giant word — anchored just above the fence line */}
@@ -163,6 +212,18 @@ export function StylesFilm() {
           </section>
         );
       })}
+
+      {/* Next-title button — fixed bottom-center, shown only while in the pager */}
+      <button
+        ref={nextRef}
+        type="button"
+        onClick={goNext}
+        aria-label={current >= n - 1 ? "Continue to estimate" : "Next fence style"}
+        className="fixed bottom-[8vh] left-1/2 z-40 flex h-12 w-12 -translate-x-1/2 touch-manipulation items-center justify-center rounded-full bg-cream text-grove shadow-lg shadow-black/40 ring-1 ring-black/5 transition-[opacity,transform] duration-300 hover:bg-cream-deep active:scale-90"
+        style={{ opacity: 0, pointerEvents: "none" }}
+      >
+        <ChevronDown className="h-6 w-6" />
+      </button>
     </div>
   );
 }
