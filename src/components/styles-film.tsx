@@ -58,7 +58,7 @@ export function StylesFilm() {
   return (
     <div
       ref={scrollerRef}
-      className="h-[100svh] snap-y snap-mandatory overflow-y-auto overscroll-y-contain bg-grove-deep"
+      className="h-[100svh] snap-y snap-mandatory overflow-y-auto overscroll-y-auto bg-grove-deep [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
       {/* Pinned film — the scroll scrubs it; sections below overlay it */}
       <div className="pointer-events-none sticky top-0 z-0 -mb-[100svh] h-[100svh]">
