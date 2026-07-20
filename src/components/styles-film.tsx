@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { useFilmScrub, type Seg } from "@/lib/film";
 import { showcasePanels } from "@/lib/site";
@@ -25,6 +25,35 @@ export function StylesFilm() {
   const n = showcasePanels.length; // 5
   const pos = progress * (n - 1); // 0..4 (which material we're on/between)
   const current = Math.round(pos);
+
+  // Firm snapping ONLY while inside the material stops: flip <html>'s
+  // scroll-snap-type to `mandatory` there (so a swipe always lands on a
+  // material, never a half-state) and back to `none` past the last one (so the
+  // page — including the tall builder below — keeps scrolling free, no trap).
+  // It's a position-based property flip; the snap itself is native CSS.
+  useEffect(() => {
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const html = document.documentElement;
+    const apply = () => {
+      const range = wrap.offsetHeight - window.innerHeight;
+      const wrapTop = wrap.getBoundingClientRect().top + window.scrollY;
+      const y = window.scrollY;
+      const withinMaterials =
+        range > 0 && y >= wrapTop - 1 && y <= wrapTop + range + 1;
+      const want = withinMaterials ? "y mandatory" : "none";
+      if (html.style.scrollSnapType !== want) html.style.scrollSnapType = want;
+    };
+    apply();
+    window.addEventListener("scroll", apply, { passive: true });
+    window.addEventListener("resize", apply);
+    return () => {
+      window.removeEventListener("scroll", apply);
+      window.removeEventListener("resize", apply);
+      html.style.scrollSnapType = "";
+    };
+  }, []);
 
   function quoteStyle(slug: string) {
     window.dispatchEvent(new CustomEvent("slf:pick-material", { detail: slug }));
