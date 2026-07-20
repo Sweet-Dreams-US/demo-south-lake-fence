@@ -14,6 +14,6 @@
     <path d="M16 104 q13 -9 26 0 t26 0 t26 0" fill="none" stroke="#8fc0f2" stroke-width="6" stroke-linecap="round"/>
   </g>
   <!-- wordmark -->
-  <text x="152" y="68" font-family="Arial Black, Arial, Helvetica, sans-serif" font-weight="900" font-size="34" fill="#2d54ad" letter-spacing="6">SOUTH LAKE</text>
-  <text x="150" y="148" font-family="Arial Black, Arial, Helvetica, sans-serif" font-weight="900" font-size="92" fill="#1e46c8" letter-spacing="2">FENCE</text>
+  <text x="152" y="68" font-family="Arial Black, Arial, Helvetica, sans-serif" font-weight="900" font-size="34" fill="#3b9fe3" letter-spacing="6">SOUTH LAKE</text>
+  <text x="150" y="148" font-family="Arial Black, Arial, Helvetica, sans-serif" font-weight="900" font-size="92" fill="#1d3fb2" letter-spacing="2">FENCE</text>
 </svg>
