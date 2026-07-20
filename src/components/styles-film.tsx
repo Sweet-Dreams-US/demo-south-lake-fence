@@ -220,7 +220,7 @@ export function StylesFilm() {
         type="button"
         onClick={goNext}
         aria-label={current >= n - 1 ? "Continue to estimate" : "Next fence style"}
-        className="fixed bottom-[8vh] left-1/2 z-40 flex h-12 w-12 -translate-x-1/2 touch-manipulation items-center justify-center rounded-full bg-cream text-grove shadow-lg shadow-black/40 ring-1 ring-black/5 transition-[opacity,transform] duration-300 hover:bg-cream-deep active:scale-90"
+        className="fixed bottom-[13vh] right-4 z-40 flex h-12 w-12 touch-manipulation items-center justify-center rounded-full bg-cream text-grove shadow-lg shadow-black/40 ring-1 ring-black/5 transition-[opacity,transform] duration-300 hover:bg-cream-deep active:scale-90 sm:right-6"
         style={{ opacity: 0, pointerEvents: "none" }}
       >
         <ChevronDown className="h-6 w-6" />
