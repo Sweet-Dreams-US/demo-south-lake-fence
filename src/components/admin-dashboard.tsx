@@ -212,8 +212,9 @@ function StatusPill({ s }: { s: string }) {
 
 function Table({ head, rows }: { head: string[]; rows: React.ReactNode[][] }) {
   return (
-    <div className="overflow-x-auto rounded-2xl border border-line">
-      <table className="w-full min-w-[560px] text-left text-sm">
+    <div className="rounded-2xl border border-line">
+      {/* Wide screens: a real table */}
+      <table className="hidden w-full text-left text-sm lg:table">
         <thead className="bg-cream/50 text-xs uppercase tracking-wide text-ink/50">
           <tr>
             {head.map((h) => (
@@ -235,6 +236,29 @@ function Table({ head, rows }: { head: string[]; rows: React.ReactNode[][] }) {
           ))}
         </tbody>
       </table>
+
+      {/* Phones: each row becomes a stacked card — no sideways scroll */}
+      <ul className="divide-y divide-line lg:hidden">
+        {rows.map((r, i) => (
+          <li key={i} className="grid gap-1.5 p-4">
+            {r.map((c, j) =>
+              head[j] ? (
+                <div
+                  key={j}
+                  className="flex items-baseline justify-between gap-3"
+                >
+                  <span className="shrink-0 text-xs font-semibold uppercase tracking-wide text-ink/40">
+                    {head[j]}
+                  </span>
+                  <span className="min-w-0 break-words text-right text-ink/80">
+                    {c}
+                  </span>
+                </div>
+              ) : null,
+            )}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
@@ -350,8 +374,9 @@ function InquiriesTab({
         </div>
       )}
 
-      <div className="overflow-x-auto rounded-2xl border border-line">
-        <table className="w-full min-w-[620px] text-left text-sm">
+      <div className="rounded-2xl border border-line">
+        {/* Wide screens: a real table */}
+        <table className="hidden w-full text-left text-sm lg:table">
           <thead className="bg-cream/50 text-xs uppercase tracking-wide text-ink/50">
             <tr>
               {["From", "Wants", "Came in via", "Received", "Status", ""].map(
@@ -396,6 +421,45 @@ function InquiriesTab({
             ))}
           </tbody>
         </table>
+
+        {/* Phones: each inquiry is a tappable card — no sideways scroll */}
+        <ul className="divide-y divide-line lg:hidden">
+          {leads.map((l) => (
+            <li key={l.id}>
+              <button
+                type="button"
+                onClick={() => setOpen(l)}
+                className="flex w-full items-start gap-3 p-4 text-left transition-colors hover:bg-cream/40 active:bg-cream/60"
+              >
+                <div className="min-w-0 flex-1">
+                  <span className="flex items-center gap-2">
+                    {l.live && (
+                      <span className="inline-flex h-2 w-2 shrink-0 rounded-full bg-clay" />
+                    )}
+                    <span className="truncate font-semibold text-ink">
+                      {l.name}
+                    </span>
+                  </span>
+                  {l.town && (
+                    <span className="mt-0.5 block text-xs text-ink/50">
+                      {l.town}
+                    </span>
+                  )}
+                  <span className="mt-1.5 block text-sm text-ink/80">
+                    {l.wants}
+                  </span>
+                  <span className="mt-1 block text-xs text-ink/50">
+                    {l.via} · {l.received}
+                  </span>
+                </div>
+                <div className="flex shrink-0 flex-col items-end gap-2">
+                  <StatusPill s={l.status} />
+                  <ChevronRight className="h-4 w-4 text-ink/35" />
+                </div>
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
 
       <p className="flex items-center gap-2 rounded-2xl bg-grove/5 px-4 py-3 text-sm text-grove">
