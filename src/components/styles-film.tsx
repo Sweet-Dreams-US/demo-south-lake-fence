@@ -76,9 +76,10 @@ export function StylesFilm() {
     const updateNav = () => {
       const nav = nextRef.current;
       if (!nav) return;
-      const { range, wrapTop } = geom();
-      const y = window.scrollY;
-      const show = range > 0 && y >= wrapTop - 4 && y <= wrapTop + range + 4;
+      // Visible whenever the pinned film spans the middle of the viewport.
+      const r = wrap.getBoundingClientRect();
+      const mid = window.innerHeight / 2;
+      const show = r.top < mid && r.bottom > mid;
       nav.style.opacity = show ? "1" : "0";
       nav.style.pointerEvents = show ? "auto" : "none";
     };
