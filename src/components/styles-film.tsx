@@ -26,32 +26,45 @@ export function StylesFilm() {
   const pos = progress * (n - 1); // 0..4 (which material we're on/between)
   const current = Math.round(pos);
 
-  // Firm snapping ONLY while inside the material stops: flip <html>'s
-  // scroll-snap-type to `mandatory` there (so a swipe always lands on a
-  // material, never a half-state) and back to `none` past the last one (so the
-  // page — including the tall builder below — keeps scrolling free, no trap).
-  // It's a position-based property flip; the snap itself is native CSS.
+  // When scrolling settles BETWEEN two materials, glide to the nearest one so a
+  // swipe never leaves you in a half-state. Scoped to the material stops only —
+  // it never fires in the exit zone below the last material, so the builder
+  // below keeps scrolling free (no trap). CSS proximity handles the rest.
   useEffect(() => {
     const wrap = wrapRef.current;
     if (!wrap) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const html = document.documentElement;
-    const apply = () => {
+    let snapping = false;
+
+    const snapNearest = () => {
+      if (snapping) return;
       const range = wrap.offsetHeight - window.innerHeight;
+      if (range <= 0) return;
       const wrapTop = wrap.getBoundingClientRect().top + window.scrollY;
       const y = window.scrollY;
-      const withinMaterials =
-        range > 0 && y >= wrapTop - 1 && y <= wrapTop + range + 1;
-      const want = withinMaterials ? "y mandatory" : "none";
-      if (html.style.scrollSnapType !== want) html.style.scrollSnapType = want;
+      if (y < wrapTop - 2 || y > wrapTop + range + 2) return; // exit zone → free
+      const step = range / (n - 1);
+      const i = Math.max(0, Math.min(n - 1, Math.round((y - wrapTop) / step)));
+      const target = Math.round(wrapTop + i * step);
+      if (Math.abs(target - y) < 4) return; // already on a material
+      snapping = true;
+      window.scrollTo({ top: target, behavior: "smooth" });
+      setTimeout(() => (snapping = false), 600);
     };
-    apply();
-    window.addEventListener("scroll", apply, { passive: true });
-    window.addEventListener("resize", apply);
+
+    const hasScrollEnd = "onscrollend" in window;
+    let idle: ReturnType<typeof setTimeout> | undefined;
+    const onScroll = () => {
+      if (hasScrollEnd || snapping) return;
+      clearTimeout(idle);
+      idle = setTimeout(snapNearest, 120);
+    };
+    if (hasScrollEnd) window.addEventListener("scrollend", snapNearest);
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
-      window.removeEventListener("scroll", apply);
-      window.removeEventListener("resize", apply);
-      html.style.scrollSnapType = "";
+      if (hasScrollEnd) window.removeEventListener("scrollend", snapNearest);
+      window.removeEventListener("scroll", onScroll);
+      clearTimeout(idle);
     };
   }, []);
 
