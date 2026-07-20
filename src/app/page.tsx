@@ -32,11 +32,11 @@ export default function HomePage() {
               <br /> in the same backyard.
             </h2>
             <p className="mx-auto mt-5 max-w-md text-pretty text-lg text-cream/70">
-              Wood, aluminum, vinyl, chain link, wrought iron — one yard, one
+              Wood, aluminum, vinyl, chain link, field & ranch — one yard, one
               scroll. You&apos;ve never shopped a fence like this.
             </p>
             <div className="mt-7 flex flex-wrap items-center justify-center gap-2">
-              {["Wood", "Aluminum", "Vinyl", "Chain Link", "Wrought Iron"].map(
+              {["Wood", "Aluminum", "Vinyl", "Chain Link", "Field & Ranch"].map(
                 (n) => (
                   <span
                     key={n}

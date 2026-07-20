@@ -9,7 +9,7 @@ import { materials } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Fence Styles & Materials — Design Your Fence | South Lake Fence",
   description:
-    "Watch every fence style slide across a real Central Florida yard, then design yours: wood, aluminum, vinyl/PVC, chain link and wrought iron, with a free pre-filled estimate.",
+    "Watch every fence style slide across a real Central Florida yard, then design yours: wood, aluminum, vinyl/PVC, chain link and field & ranch, with a free pre-filled estimate.",
 };
 
 export default function StylesPage() {

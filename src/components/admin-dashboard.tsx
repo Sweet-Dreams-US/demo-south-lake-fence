@@ -287,7 +287,7 @@ const seedLeads: Lead[] = [
   { id: "L-MCAR", name: "Mike & Carol T.", town: "Groveland", phone: "(352) 555-0173", email: "mct@email.com", wants: "Storm repair — 40 ft down", material: "Wood Privacy", height: "6 ft", gate: "Single walk gate", length: "~40 ft", addons: ["Stain & seal package"], via: "Design-Your-Fence builder", status: "Called back", received: "Yesterday" },
   { id: "L-OAKG", name: "Oak Grove HOA", town: "Minneola", phone: "(407) 555-0199", email: "board@oakgrovehoa.org", wants: "Community perimeter walk-through", material: "Aluminum Ornamental", height: "6 ft", gate: "Keyed lockable gate", length: "~1,400 ft", addons: [], via: "Commercial page — site brief", status: "Visit booked", received: "Yesterday" },
   { id: "L-PRIY", name: "Priya S.", town: "Montverde", phone: "(407) 555-0121", email: "priya.s@email.com", wants: "Wood privacy + pool-code check", material: "Wood Privacy", height: "6 ft", gate: "Double drive gate", length: "~160 ft", addons: ["Stain & seal package"], via: "Pool self-inspection → fix it", status: "Visit booked", received: "2 days ago" },
-  { id: "L-JBAR", name: "J. Barnett", town: "Groveland", phone: "(352) 555-0110", email: "jbarnett@email.com", wants: "Wrought iron entrance", material: "Wrought Iron", height: "6 ft", gate: "Automated drive gate", length: "~90 ft", addons: ["Gate automation"], via: "Phone call", status: "Called back", received: "3 days ago" },
+  { id: "L-JBAR", name: "J. Barnett", town: "Groveland", phone: "(352) 555-0110", email: "jbarnett@email.com", wants: "Ranch field fence", material: "Field & Ranch", height: "5 ft", gate: "Tube ranch gate", length: "~1200 ft", addons: ["Wood H-brace corners"], via: "Phone call", status: "Called back", received: "3 days ago" },
 ];
 
 function liveToLead(q: Inquiry): Lead {
@@ -874,7 +874,7 @@ function EstimatesTab({
           ["EST-2041", "Alvarez family", "Vinyl privacy, 210 ft", "alvarez.fam@email.com", "Tue", <StatusPill key="s" s="Opened" />],
           ["EST-2040", "Oak Grove HOA", "Community perimeter", "board@oakgrovehoa.org", "Mon", <StatusPill key="s" s="Emailed" />],
           ["EST-2039", "Mike & Carol T.", "Storm repair, 40 ft", "mct@email.com", "Mon", <StatusPill key="s" s="Accepted" />],
-          ["EST-2036", "J. Barnett", "Wrought iron entrance", "jbarnett@email.com", "Last wk", <StatusPill key="s" s="Accepted" />],
+          ["EST-2036", "J. Barnett", "Ranch field fence, 1200 ft", "jbarnett@email.com", "Last wk", <StatusPill key="s" s="Accepted" />],
         ]}
       />
 

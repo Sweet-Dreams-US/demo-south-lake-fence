@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 170" role="img" aria-label="South Lake Fence">
+  <g transform="translate(12,25)">
+    <rect x="0" y="0" width="120" height="120" rx="26" fill="none" stroke="#ffffff" stroke-width="4"/>
+    <g fill="#ffffff">
+      <path d="M20 44 L28 30 L36 44 V92 H20 Z"/>
+      <path d="M46 40 L54 24 L62 40 V92 H46 Z"/>
+      <path d="M72 44 L80 30 L88 44 V92 H72 Z"/>
+      <rect x="14" y="56" width="88" height="8" rx="2"/>
+      <rect x="14" y="72" width="88" height="8" rx="2"/>
+    </g>
+    <path d="M16 104 q13 -9 26 0 t26 0 t26 0" fill="none" stroke="#8fc0f2" stroke-width="6" stroke-linecap="round"/>
+  </g>
+  <text x="152" y="68" font-family="Arial Black, Arial, Helvetica, sans-serif" font-weight="900" font-size="34" fill="#cfe0f8" letter-spacing="6">SOUTH LAKE</text>
+  <text x="150" y="148" font-family="Arial Black, Arial, Helvetica, sans-serif" font-weight="900" font-size="92" fill="#ffffff" letter-spacing="2">FENCE</text>
+</svg>

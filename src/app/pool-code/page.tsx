@@ -156,7 +156,7 @@ export default function PoolCodePage() {
                   "Powder-coated aluminum — rust-proof, see-through, keeps the view.",
                   "Self-closing, self-latching hardware built in — not bolted on later.",
                   "Puppy-picket bottom rail keeps small pets in, too.",
-                  "Wrought-iron upgrade for estates and custom entrances.",
+                  "Flat-top or spear-top pickets to match your home.",
                 ].map((s) => (
                   <li key={s} className="flex items-start gap-3">
                     <Check className="mt-0.5 h-5 w-5 shrink-0 text-clay" />

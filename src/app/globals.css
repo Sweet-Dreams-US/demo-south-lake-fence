@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  /* South Lake Fence brand palette — built fresh from the Clermont landscape */
-  --clay: #c4622d;        /* primary — Florida clay + fresh cedar */
-  --clay-dark: #a44f22;
-  --grove: #1f4d36;       /* anchor — citrus-grove hills */
-  --grove-deep: #163826;
-  --gold: #e8b646;        /* accent — golden-hour hill light */
-  --cedar: #8b5a3c;       /* secondary — wood-fence tone */
-  --cream: #faf3e7;       /* warm background */
-  --cream-deep: #f1e6d2;
-  --ink: #22201c;         /* body text */
-  --sky: #5ca9c7;         /* accent — lakes & pools */
+  /* South Lake Fence brand palette — bold royal blue + white ("no sag, no lean") */
+  --clay: #1e46c8;        /* primary — South Lake royal blue (CTAs) */
+  --clay-dark: #17389f;
+  --grove: #16255c;       /* anchor — deep navy (dark surfaces) */
+  --grove-deep: #0f1a44;
+  --gold: #3f8fe0;        /* accent — bright South Lake sky blue */
+  --cedar: #2d54ad;       /* secondary — mid blue */
+  --cream: #f5f8ff;       /* clean blue-white background */
+  --cream-deep: #e7eefb;
+  --ink: #101d3f;         /* body text — deep navy */
+  --sky: #6db3ea;         /* accent — lakes & pools */
   --card: #ffffff;
-  --line: #e7dcc6;
+  --line: #dae3f4;
 }
 
 @theme inline {

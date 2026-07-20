@@ -8,18 +8,19 @@ export const business = {
   phone: "(407) 785-4900",
   phoneHref: "tel:+14077854900",
   email: "Southlakefence@gmail.com",
+  website: "FenceInstallationInClermontFL.com",
   address: "16751 7th St, Montverde, FL 34756",
   hours: [
     { d: "Mon – Fri", h: "7:00 AM – 5:00 PM" },
     { d: "Saturday", h: "By appointment" },
     { d: "Sunday", h: "Closed" },
   ],
-  tagline: "Built by family. Built to last.",
+  tagline: "No sag, no lean — just the best you've ever seen.",
   primaryLine: "Lake County's Fence Family, Since 1997.",
 } as const;
 
 export const voiceLines = [
-  "Built by family. Built to last.",
+  "No sag, no lean — just the best you've ever seen.",
   "Every post, set right.",
   "Good fences. Great neighbors. Since '97.",
   "Florida-tough, family-built.",
@@ -124,21 +125,21 @@ export const materials: Material[] = [
     priceFrom: 18,
   },
   {
-    slug: "wrought-iron",
-    name: "Wrought Iron",
+    slug: "field",
+    name: "Field & Ranch",
     blurb:
-      "Custom, welded, and built to impress — the grand-entrance and estate option, made for a lifetime.",
-    image: media.pool,
-    bestFor: "Estates • Entrances • Security with style",
-    heightsFt: [5, 6, 8],
-    gates: ["Custom estate gate", "Automated drive gate", "Arched pedestrian gate"],
+      "Woven-wire field fence for pastures, acreage and livestock — set straight, tensioned tight, and braced to hold for decades.",
+    image: media.field,
+    bestFor: "Ranches • Pastures • Acreage • Livestock",
+    heightsFt: [4, 5, 6],
+    gates: ["Tube ranch gate", "Wide drive-through gate", "Walk gate"],
     addOns: [
-      { label: "Gate automation", note: "Keypad + remote entry" },
-      { label: "Custom scrollwork", note: "Designed with you" },
-      { label: "Powder-coat finish", note: "Any color, rust-proof" },
+      { label: "Barbed top strand", note: "Extra livestock control" },
+      { label: "Wood H-brace corners", note: "Built to hold tension" },
+      { label: "Cattle guard", note: "Drive-over — no gate to open" },
     ],
-    priceFrom: 55,
-    tag: "Custom",
+    priceFrom: 9,
+    tag: "Acreage",
   },
 ];
 
@@ -162,7 +163,7 @@ export const propertyTypes: PropertyType[] = [
     slug: "pool",
     label: "Around my pool",
     hint: "Florida safety code applies here",
-    recommend: ["aluminum", "wrought-iron"],
+    recommend: ["aluminum", "vinyl"],
     upsell: {
       label: "Self-closing / self-latching gate hardware",
       note: "Required by Florida pool-safety code — we install it to pass inspection.",
@@ -179,7 +180,7 @@ export const propertyTypes: PropertyType[] = [
     slug: "commercial",
     label: "Commercial / site",
     hint: "Security, scale, and durability",
-    recommend: ["chain-link", "wrought-iron", "aluminum"],
+    recommend: ["chain-link", "aluminum", "vinyl"],
     upsell: { label: "Security-grade gate automation", note: "Keypad, badge, or remote access control." },
   },
 ];
@@ -232,13 +233,13 @@ export const showcasePanels: ShowcasePanel[] = [
     priceFrom: 18,
   },
   {
-    slug: "wrought-iron",
-    word: "IRON",
-    name: "Wrought Iron",
+    slug: "field",
+    word: "FIELD",
+    name: "Field & Ranch",
     detail:
-      "Custom, welded, and built to impress — estate entrances and security with style.",
-    image: media.panoIron,
-    priceFrom: 55,
+      "Woven-wire pasture and livestock fence — miles of it, set straight and tensioned to last across the acreage.",
+    image: media.panoField,
+    priceFrom: 9,
   },
 ];
 
@@ -249,7 +250,7 @@ export const differentiators = [
   },
   {
     title: "Every material, one crew",
-    body: "Wood, aluminum, vinyl, chain link, wrought iron, pool enclosures and temporary construction fence — all under one roof.",
+    body: "Wood, aluminum, vinyl, chain link, field & ranch, pool enclosures and temporary construction fence — all under one roof.",
   },
   {
     title: "We repair any fence",
