@@ -42,10 +42,6 @@
 
 html {
   scroll-behavior: smooth;
-  /* Gentle snap: sections that opt in with scroll-snap-align (the Styles &
-     Materials pager) land cleanly; everything else scrolls normally and is
-     never trapped. Proximity (not mandatory) so the page always scrolls free. */
-  scroll-snap-type: y proximity;
 }
 
 body {
@@ -103,6 +99,6 @@ img, video, canvas, svg {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; scroll-snap-type: none; }
+  html { scroll-behavior: auto; }
   .animate-fadeup { animation: none; }
 }
