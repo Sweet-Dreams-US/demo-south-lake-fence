@@ -53,8 +53,8 @@ export function StylesFilm() {
         return (
           <section
             key={p.slug}
-            className={`relative z-10 h-[100svh] snap-start snap-always${
-              i === 0 ? " -mt-[100svh]" : ""
+            className={`relative z-10 h-[100svh] snap-start [scroll-snap-stop:always] ${
+              i === 0 ? "-mt-[100svh]" : ""
             }`}
             aria-label={p.name}
           >
