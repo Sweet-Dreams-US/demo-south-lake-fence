@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { useScrollerFilm } from "@/lib/film";
 import { showcasePanels } from "@/lib/site";
@@ -17,6 +17,30 @@ export function StylesFilm() {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const progress = useScrollerFilm(scrollerRef, canvasRef, F0, 1);
+
+  // Hand the wheel off to the PAGE once the material pager is at a boundary.
+  // The nested snap scroller otherwise keeps absorbing the wheel at the last
+  // (and first) material — nudging the text instead of continuing the page.
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      const max = el.scrollHeight - el.clientHeight;
+      const down = e.deltaY > 0;
+      const atBottom = el.scrollTop >= max - 1;
+      const atTop = el.scrollTop <= 0;
+      if ((down && atBottom) || (!down && atTop)) {
+        e.preventDefault();
+        const scale =
+          e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? el.clientHeight : 1;
+        // Force "instant" so the page tracks the wheel 1:1 — the root has
+        // scroll-behavior:smooth, which would otherwise make the handoff lag.
+        window.scrollBy({ top: e.deltaY * scale, behavior: "instant" });
+      }
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
 
   const n = showcasePanels.length; // 5
   const pos = progress * (n - 1); // 0..4 (which material we're on/between)
