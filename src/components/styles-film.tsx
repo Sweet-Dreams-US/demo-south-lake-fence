@@ -35,8 +35,12 @@ export function StylesFilm() {
 
   return (
     <div ref={wrapRef} className="relative bg-grove-deep">
-      {/* Pinned film — the page scroll scrubs it; the sections below overlay it */}
-      <div className="pointer-events-none sticky top-0 z-0 -mb-[100svh] h-[100svh]">
+      {/* Pinned film — the page scroll scrubs it; the sections below overlay it.
+          No negative margin here: that would over-extend the pin by a viewport
+          and let the section below scroll up over the photo. The first material
+          section carries the -mt instead, so the canvas unpins exactly when the
+          last material is reached and the page continues cleanly. */}
+      <div className="pointer-events-none sticky top-0 z-0 h-[100svh]">
         <canvas ref={canvasRef} className="h-full w-full" />
         <div className="absolute inset-x-0 top-0 h-2/5 bg-gradient-to-b from-grove-deep/70 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-grove-deep/90 via-grove-deep/30 to-transparent" />
@@ -49,7 +53,9 @@ export function StylesFilm() {
         return (
           <section
             key={p.slug}
-            className="relative z-10 h-[100svh] snap-start"
+            className={`relative z-10 h-[100svh] snap-start snap-always${
+              i === 0 ? " -mt-[100svh]" : ""
+            }`}
             aria-label={p.name}
           >
             {/* giant word — anchored just above the fence line */}
