@@ -1,6 +1,7 @@
-// Images + scroll-scrub frames: demos Supabase `demo-media` bucket (public CDN).
+// Images + scroll-scrub frames ship in /public/media (the old demos Supabase
+// bucket was deleted — keep these local so the site has no bucket dependency).
 const BASE =
-  "https://vhyjphcwfvrcclqberoe.supabase.co/storage/v1/object/public/demo-media/demo-south-lake-fence";
+  "/media";
 
 // Video: Cloudflare Stream (adaptive HLS — crisp on mobile, streams only what
 // the device/connection needs). The film is chaptered so mobile can snap
